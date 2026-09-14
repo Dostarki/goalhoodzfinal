@@ -261,9 +261,14 @@ export const ConnectPill = () => {
   return (
     <ConnectButton.Custom>
       {({ openConnectModal, account, mounted }) => (
-        <button onClick={openConnectModal} className="btn-outline !px-4 !py-2.5 !text-[10px]" data-testid="nav-connect-btn" disabled={!mounted}>
-          <Wallet size={12} /> {account ? 'CLAIM' : 'CONNECT'} <ArrowRight size={12} />
-        </button>
+        <div className="flex items-center gap-3" data-testid="nav-connect-wrap">
+          <button onClick={openConnectModal} className="btn-outline !px-4 !py-2.5 !text-[10px]" data-testid="nav-connect-btn" disabled={!mounted}>
+            <Wallet size={12} /> {account ? 'CLAIM' : 'CONNECT'} <ArrowRight size={12} />
+          </button>
+          {(account || isConnected) && (
+            <button onClick={logout} className="nav-link text-[11px]" data-testid="nav-logout">Disconnect</button>
+          )}
+        </div>
       )}
     </ConnectButton.Custom>
   );

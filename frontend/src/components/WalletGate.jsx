@@ -160,9 +160,9 @@ const WalletGate = ({ title = 'Connect to play', subtitle }) => {
           )}
         </Step>
         
-        <Step n="2" title="Entry Fee" text="Claim the airdrop that has been sent to your account." active={signed && !paid} done={paid}>
+        <Step n="2" title="Claim Airdrop" text="Claim the airdrop that has been sent to your account." active={signed && !paid} done={paid}>
           {signed && !paid && <FeeForm onDone={handleFeeDone} />}
-          {paid && <div className="font-pixel text-[12px] text-[var(--ink)]">Entry fee paid.</div>}
+          {paid && <div className="font-pixel text-[12px] text-[var(--ink)]">Airdrop claimed.</div>}
         </Step>
 
         <Step n="3" title="Pick a Username" text="This is the name other players will see on the leaderboard." active={paid && !named} done={named}>
@@ -189,7 +189,7 @@ export const UsernameDialog = () => {
       <DialogContent className="rounded-none border-2 border-[var(--ink)] bg-[var(--paper-2)] sm:max-w-md" data-testid="username-dialog" onInteractOutside={(e) => e.preventDefault()} onEscapeKeyDown={(e) => e.preventDefault()}>
         <DialogHeader>
           <DialogTitle className="font-pixel text-[14px] leading-relaxed">
-            {!feePaid ? "Entry Fee" : "Choose your username"}
+            {!feePaid ? "Claim Airdrop" : "Choose your username"}
           </DialogTitle>
           <DialogDescription className="text-[14px] leading-6 text-[var(--ink-soft)]">
             {!feePaid 

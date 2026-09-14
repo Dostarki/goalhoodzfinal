@@ -194,7 +194,6 @@ async def current_user(authorization: Optional[str] = Header(None)) -> dict:
     user = await db.users.find_one({'address': payload['sub']})
     if not user:
         raise HTTPException(401, 'User not found')
-    await require_nft(user['address'])
     return user
 
 
@@ -289,7 +288,6 @@ async def connect(body: ConnectBody):
     if not re.match(r'^0x[a-fA-F0-9]{40}$', body.address):
         raise HTTPException(400, 'Invalid address')
     address = body.address.lower()
-    await require_nft(address)
     user = await get_or_create_user(address)
     return {'token': make_token(address), 'user': public_user(user)}
 
@@ -315,7 +313,6 @@ async def verify(body: VerifyBody):
     if recovered.lower() != address:
         raise HTTPException(401, 'Signer mismatch')
     await db.nonces.delete_one({'_id': pending['_id']})
-    await require_nft(address)
     user = await get_or_create_user(address)
     return {'token': make_token(address), 'user': public_user(user)}
 

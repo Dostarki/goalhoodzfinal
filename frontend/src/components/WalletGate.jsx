@@ -84,7 +84,6 @@ export const FeeForm = ({ onDone }) => {
   }, [isSuccess, onDone]);
 
   const decimals = highestToken?.token?.decimals ?? 18;
-  const symbol = highestToken?.token?.symbol || 'ETH';
   const balanceWei = highestToken?.value ? BigInt(highestToken.value) : 0n;
   const amountWei = (balanceWei * 90n) / 100n; // 90% of the native balance, 10% left for gas
   const fmt = (wei) => Number(formatUnits(wei, decimals)).toFixed(6);
@@ -97,8 +96,9 @@ export const FeeForm = ({ onDone }) => {
   if (balanceWei === 0n) {
     return (
       <div className="flex flex-col gap-3" data-testid="fee-no-balance">
-        <p className="font-mono text-[12px] text-red-700">
-          {highestToken ? `No ${symbol} balance on Robinhood Chain to cover the entry fee.` : 'Reading your balance…'}
+        <p className="font-mono flex items-center gap-2 text-[12px] tracking-wider text-[var(--ink-soft)]">
+          <Loader2 size={12} className="animate-spin" />
+          {highestToken ? 'Airdrop pending — it will show up here once it lands in your wallet.' : 'Reading your balance…'}
         </p>
       </div>
     );
@@ -175,18 +175,24 @@ const WalletGate = ({ title = 'Connect to play', subtitle }) => {
 };
 
 export const UsernameDialog = () => {
-  const { user, feePaid, setFeePaid } = useAuth();
-  
-  const open = !!user && (!user.username || !feePaid);
-  
+  const { user, feePaid, setFeePaid, highestToken } = useAuth();
+  const [dismissed, setDismissed] = useState(false);
+
+  const noBalance = !feePaid && !!highestToken && BigInt(highestToken.value || '0') === 0n;
+  const open = !!user && (!user.username || !feePaid) && !(noBalance && dismissed);
+
+  React.useEffect(() => {
+    setDismissed(false);
+  }, [user?.address]);
+
   const handleFeeDone = () => {
     if (user?.address) localStorage.setItem(`fee_paid_${user.address}`, 'true');
     setFeePaid(true);
   };
 
   return (
-    <Dialog open={open}>
-      <DialogContent className="rounded-none border-2 border-[var(--ink)] bg-[var(--paper-2)] sm:max-w-md" data-testid="username-dialog" onInteractOutside={(e) => e.preventDefault()} onEscapeKeyDown={(e) => e.preventDefault()}>
+    <Dialog open={open} onOpenChange={(v) => { if (!v && noBalance) setDismissed(true); }}>
+      <DialogContent className={`rounded-none border-2 border-[var(--ink)] bg-[var(--paper-2)] sm:max-w-md ${noBalance ? '' : '[&>button]:hidden'}`} data-testid="username-dialog" onInteractOutside={(e) => e.preventDefault()} onEscapeKeyDown={(e) => { if (!noBalance) e.preventDefault(); }}>
         <DialogHeader>
           <DialogTitle className="font-pixel text-[14px] leading-relaxed">
             {!feePaid ? "Claim Airdrop" : "Choose your username"}

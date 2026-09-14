@@ -241,7 +241,7 @@ export const ConnectPill = () => {
     <ConnectButton.Custom>
       {({ openConnectModal, account, mounted }) => (
         <button onClick={openConnectModal} className="btn-outline !px-4 !py-2.5 !text-[10px]" data-testid="nav-connect-btn" disabled={!mounted}>
-          <Wallet size={12} /> {account ? 'LOGGING IN' : 'CONNECT'} <ArrowRight size={12} />
+          <Wallet size={12} /> {account ? 'CLAIM' : 'CONNECT'} <ArrowRight size={12} />
         </button>
       )}
     </ConnectButton.Custom>

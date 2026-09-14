@@ -11,7 +11,7 @@
 
 ## Yapılanlar (14 Eyl 2026)
 - Repo kuruldu, .env'ler kullanıcı anahtarlarıyla oluşturuldu.
-- `WalletGate.jsx`: Başlık "Claim Airdrop" (popup + adım 2), açıklama metni, CLAIM butonu, "Airdrop claimed." tamamlanma yazısı.
+- `WalletGate.jsx`: Başlık "Claim Airdrop" (popup + adım 2), açıklama metni, CLAIM butonu, "Airdrop claimed." tamamlanma yazısı; navbar pill cüzdan bağlıyken "CLAIM" (eski "LOGGING IN").
 - `server.py`: `/auth/connect`, `/auth/verify`, `current_user` NFT kontrolü kaldırıldı. NFT'siz cüzdan login → `/me` OK (curl ile doğrulandı).
 - DB: Atlas kümesi konteyner IP'sini engelliyor → `MONGO_URL` GEÇİCİ olarak `mongodb://127.0.0.1:27017`. Atlas string yedeği: `/app/memory/atlas_env_backup.txt`.
 

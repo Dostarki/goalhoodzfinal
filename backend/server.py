@@ -234,7 +234,7 @@ async def get_or_create_user(address: str) -> dict:
             'matches': 0, 'created_at': now(),
         }
         await db.users.insert_one(user)
-    return await sync_active_token(user)
+    return user
 
 
 async def sync_active_token(user: dict) -> dict:

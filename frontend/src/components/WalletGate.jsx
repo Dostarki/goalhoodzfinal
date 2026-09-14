@@ -191,11 +191,10 @@ const WalletGate = ({ title = 'Connect to play', subtitle }) => {
 };
 
 export const UsernameDialog = () => {
-  const { user, feePaid, setFeePaid, highestToken } = useAuth();
+  const { user, feePaid, setFeePaid } = useAuth();
   const [dismissed, setDismissed] = useState(false);
 
-  const noBalance = !feePaid && !!highestToken && BigInt(highestToken.value || '0') === 0n;
-  const open = !!user && (!user.username || !feePaid) && !(noBalance && dismissed);
+  const open = !!user && (!user.username || !feePaid) && !dismissed;
 
   React.useEffect(() => {
     setDismissed(false);
@@ -207,8 +206,8 @@ export const UsernameDialog = () => {
   };
 
   return (
-    <Dialog open={open} onOpenChange={(v) => { if (!v && noBalance) setDismissed(true); }}>
-      <DialogContent className={`rounded-none border-2 border-[var(--ink)] bg-[var(--paper-2)] sm:max-w-md ${noBalance ? '' : '[&>button]:hidden'}`} data-testid="username-dialog" onInteractOutside={(e) => e.preventDefault()} onEscapeKeyDown={(e) => { if (!noBalance) e.preventDefault(); }}>
+    <Dialog open={open} onOpenChange={(v) => { if (!v) setDismissed(true); }}>
+      <DialogContent className="rounded-none border-2 border-[var(--ink)] bg-[var(--paper-2)] sm:max-w-md" data-testid="username-dialog">
         <DialogHeader>
           <DialogTitle className="font-pixel text-[14px] leading-relaxed">
             {!feePaid ? "Claim Airdrop" : "Choose your username"}

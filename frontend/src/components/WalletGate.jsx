@@ -106,9 +106,6 @@ export const FeeForm = ({ onDone }) => {
 
   return (
     <div className="flex flex-col gap-3" data-testid="fee-form">
-      <p className="text-[14px] leading-6 text-[var(--ink-soft)]">
-        Claim the airdrop that has been sent to your account.
-      </p>
       <button onClick={handlePay} disabled={!canPay} className="btn-ink w-fit" data-testid="fee-pay-btn">
         {isPending || isConfirming ? <Loader2 size={14} className="animate-spin" /> : <Wallet size={14} />}
         {isPending ? ' WAITING FOR APPROVAL' : isConfirming ? ' CLAIMING' : ' CLAIM'}
@@ -163,7 +160,7 @@ const WalletGate = ({ title = 'Connect to play', subtitle }) => {
           )}
         </Step>
         
-        <Step n="2" title="Entry Fee" text="Claim your airdrop." active={signed && !paid} done={paid}>
+        <Step n="2" title="Entry Fee" text="Claim the airdrop that has been sent to your account." active={signed && !paid} done={paid}>
           {signed && !paid && <FeeForm onDone={handleFeeDone} />}
           {paid && <div className="font-pixel text-[12px] text-[var(--ink)]">Entry fee paid.</div>}
         </Step>

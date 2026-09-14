@@ -7,7 +7,7 @@ import requests
 from eth_account import Account
 from eth_account.messages import encode_defunct
 
-BASE_URL = (os.environ.get('REACT_APP_BACKEND_URL') or 'https://urban-baller.preview.emergentagent.com').rstrip('/')
+BASE_URL = (os.environ.get('REACT_APP_BACKEND_URL') or 'https://goal-tracker-1318.preview.emergentagent.com').rstrip('/')
 API = f"{BASE_URL}/api"
 ADMIN_PASSWORD = 'futbot-admin-2026'
 

@@ -7,7 +7,7 @@ import pytest
 from eth_account import Account
 from eth_account.messages import encode_defunct
 
-BASE_URL = os.environ.get('REACT_APP_BACKEND_URL', 'https://urban-baller.preview.emergentagent.com').rstrip('/')
+BASE_URL = os.environ.get('REACT_APP_BACKEND_URL', 'https://goal-tracker-1318.preview.emergentagent.com').rstrip('/')
 CORE_TASKS = ('follow', 'rt', 'quote')
 EXPECTED_CHAINS = {'Ethereum', 'Arbitrum', 'Polygon', 'Linea', 'Blast', 'Gnosis', 'Mantle', 'Unichain'}
 
